@@ -10,7 +10,7 @@
 
 git 과 wsl 설치 상태여야 합니다.
 
-vscode에 LiverServer 확장해주세요.
+vscode에 LiveServer 확장해주세요.
 
 nodejs 설치 상태여야 합니다.
 
