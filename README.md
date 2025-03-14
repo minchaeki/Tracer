@@ -25,7 +25,7 @@ npm은 11.0.0 버전
 1. 프로젝트 클론 및 의존성 설치
 
 ```shell
-git clone https://github.com/사용자명/프로젝트명.git
+git clone https://github.com/minchaeki/Tracer.git
 cd 프로젝트명(파일명)
 npm install
 ```
