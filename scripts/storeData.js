@@ -7,7 +7,7 @@ const path = require("path");
 async function main() {
   const [deployer] = await ethers.getSigners();
   // 이미 Hardhat 등에서 배포된 컨트랙트 주소 (예: 로컬 Hardhat)
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
   const contract = await ethers.getContractAt("Traceability", contractAddress);
 
   console.log("Using contract at address:", contractAddress);
@@ -39,41 +39,59 @@ async function main() {
       name: "배터리",
       origin: "한국",
       details: "고성능 리튬이온 배터리. 안정적인 전력 공급을 위한 핵심 부품.",
-      processSteps: [
-        { description: "배터리 원재료 확보" },
-        { description: "조립 및 용량 테스트" },
-        { description: "품질 검증 및 포장" }
-      ]
+     processSteps: [
+  { description: "[생산] 리튬/니켈 원재료 확보 및 습도 30% 이하 조건 보관" },
+  { description: "[생산] 알루미늄 전극판 코팅 및 고온 건조 (120℃, 8시간)" },
+  { description: "[생산] 셀 적층 조립 및 고압 성형 (500kg/cm²)" },
+  { description: "[검수] 충방전 500회 사이클 테스트 (잔존 용량 90% 이상 유지)" },
+  { description: "[검수] 과충전(4.35V) 및 단락 안전성 시험 (UL1642 기준)" },
+  { description: "[포장] PVC 열수축 포장 및 라벨 자동 인쇄 부착" },
+  { description: "[유통] 냉장 창고(15℃) 24시간 보관 후 인천 조립 라인 배송" }
+]
     },
     {
       name: "디스플레이",
       origin: "일본",
       details: "고해상도 OLED 디스플레이. 선명한 화질과 낮은 전력 소모가 특징.",
       processSteps: [
-        { description: "패널 생산" },
-        { description: "컬러 보정 및 조립" },
-        { description: "검수 및 출하 준비" }
-      ]
+  { description: "[생산] 기판 위 OLED 증착 (유기 재료 3층 구조, FMM 방식)" },
+  { description: "[생산] LTPS TFT 배선 처리 및 양산용 레이저 어닐링" },
+  { description: "[생산] 컬러 필터 정렬 및 압착 라미네이션 (120kg/㎠)" },
+  { description: "[검수] 휘도 800nit 이상, 명암비 10,000:1 기준 측정" },
+  { description: "[검수] 10점 터치 오차율 ±1.0% 이하 테스트" },
+  { description: "[포장] 정전기 방지 포장지 + 다층 완충제 사용" },
+  { description: "[유통] 항온창고(20±2℃) 12시간 보관 후 운송장 발급 및 출고" }
+]
     },
     {
       name: "프로세서",
       origin: "미국",
       details: "최신 AI 지원 프로세서. 고성능 연산 및 에너지 효율이 뛰어남.",
-      processSteps: [
-        { description: "칩 설계 및 생산" },
-        { description: "성능 테스트 및 최적화" },
-        { description: "패키징 및 출하" }
-      ]
+     processSteps: [
+  { description: "[설계] 5nm 공정 기반 ARM Cortex-A78 설계 최적화" },
+  { description: "[생산] EUV 리소그래피 기반 웨이퍼 패터닝 수행" },
+  { description: "[생산] 다이 컷팅 및 BGA(288핀) 패키지 조립" },
+  { description: "[검수] 연산능력 테스트 (Geekbench 멀티코어 3800점 이상)" },
+  { description: "[검수] Junction 온도 100℃ 기준 24시간 버닝테스트" },
+  { description: "[포장] Drypack + MSL3 등급 레벨 습기 방지 포장" },
+  { description: "[유통] DHL 항공물류 배송 후 최종 조립 공정 입고 등록" }
+]
+
     },
     {
       name: "카메라 모듈",
       origin: "독일",
       details: "고화질 이미지 센서 탑재. 뛰어난 색감과 선명도를 자랑함.",
       processSteps: [
-        { description: "렌즈 및 센서 조립" },
-        { description: "해상도 및 색상 테스트" },
-        { description: "마감 처리 및 포장" }
-      ]
+  { description: "[생산] 8P 렌즈 정렬 및 1/1.7\" 이미지 센서 부착" },
+  { description: "[생산] IR 필터 삽입 및 레이저 정렬 보정" },
+  { description: "[생산] FPC 접착 및 저온 리플로우 납땜 (260℃, 30초)" },
+  { description: "[검수] SNR(신호대잡음비) 45dB 이상, 해상도 12MP 테스트" },
+  { description: "[검수] 색상 정확도 DeltaE 2.0 이하 측정" },
+  { description: "[포장] 방진 비닐 + 품질 인증 스티커 부착" },
+  { description: "[유통] EMS(전자조립업체)로 납품 및 ERP 시스템 등록" }
+]
+
     }
   ];
 
@@ -81,7 +99,8 @@ async function main() {
   const componentTrackingIds = {}; // key: component name, value: trackingId
   for (let comp of components) {
     // 1) 부속품 생성 (스마트컨트랙트 호출)
-    let tx = await contract.createComponent(comp.name, comp.origin, comp.details);
+    let stepDescriptions = comp.processSteps.map(step => step.description);
+    let tx = await contract.createComponent(comp.name, comp.origin, comp.details, stepDescriptions);
     let receipt = await tx.wait();
     let args = getEventArgs(receipt, "ComponentCreated");
     let rawTrackingId = args ? args.trackingId.toString() : undefined;
@@ -195,24 +214,14 @@ async function main() {
     // ------------------------------------
     // QR 코드 생성 (완성품에 대해서만)
     // ------------------------------------
-    const productURL = `https://yourdomain.com/product.html?product=${rawProductId}`;
+    const productQRContent = `Product ID: ${rawProductId}`;
     await new Promise((resolve, reject) => {
-      QRCode.toDataURL(productURL, { errorCorrectionLevel: 'H' }, (err, url) => {
-        if (err) {
-          console.error("❌ QR 코드 생성 실패:", err);
-          return reject(err);
-        }
-        console.log(`✅ ${finished.name} QR 코드 생성 완료`);
-        // QR 코드 Data URL을 파일로 저장 (png 형식)
+      QRCode.toDataURL(productQRContent, { errorCorrectionLevel: 'H' }, (err, url) => {
+        if (err) return reject(err);
         const base64Data = url.replace(/^data:image\/png;base64,/, "");
-        // 프로젝트 전체(현재 폴더)에 저장
         const filePath = path.join(__dirname, `qr_product_${rawProductId}.png`);
         fs.writeFile(filePath, base64Data, 'base64', err => {
-          if (err) {
-            console.error("❌ QR 코드 파일 저장 실패:", err);
-            return reject(err);
-          }
-          console.log(`✅ QR 코드 파일이 ${filePath} 로 저장되었습니다.`);
+          if (err) return reject(err);
           resolve();
         });
       });

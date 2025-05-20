@@ -1,0 +1,23 @@
+<!-- frontend/productRegister.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>완성품 등록</title>
+</head>
+<body>
+  <h2>완성품 등록</h2>
+
+  <form id="productForm">
+    <input type="text" id="productName" placeholder="완성품 이름" required />
+    <div id="componentsContainer">
+      <!-- 부속품 사용 정보 필드들이 여기에 들어감 -->
+    </div>
+    <button type="button" id="addComponentBtn">부속품 추가</button>
+    <br /><br />
+    <button type="submit">JSON 파일로 저장</button>
+  </form>
+
+  <script src="js/productRegister.js"></script>
+</body>
+</html>

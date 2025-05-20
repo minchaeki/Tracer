@@ -10,10 +10,9 @@
   await provider.send("eth_requestAccounts", []);
   const signer = provider.getSigner();
 
-  // 2) 컨트랙트 정보 (예시: 로컬 Hardhat 주소)
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-  const contractABI = [
-    {
+  // 2) 컨트랙트 정보
+  const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
+  const contractABI = [{
       "anonymous": false,
       "inputs": [
         {
@@ -163,6 +162,11 @@
           "internalType": "string",
           "name": "_details",
           "type": "string"
+        },
+        {
+          "internalType": "string[]",
+          "name": "_processDescriptions",
+          "type": "string[]"
         }
       ],
       "name": "createComponent",
@@ -417,22 +421,23 @@
       ],
       "stateMutability": "view",
       "type": "function"
-    }
-  ];
+    }];
 
   const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
   // 3) 사용자 입력
   const inputId = prompt("조회할 트래킹 ID 또는 제품 ID를 입력하세요");
-  if (!inputId) {
+  const parsedId = parseInt(inputId);
+
+  if (isNaN(parsedId)) {
     document.getElementById("timeline").innerHTML = 
-      "<p>트래킹 ID가 입력되지 않았습니다.</p>";
+      "<p>유효한 숫자가 아닙니다.</p>";
     return;
   }
 
-  // (A) 그룹 관리용
+  // 그룹 및 아이템 준비
   let groups = new vis.DataSet();
-  let groupMap = {};     // 부속품 이름 -> groupId
+  let groupMap = {};
   let groupIdCounter = 1;
 
   function getGroupId(compName) {
@@ -444,13 +449,11 @@
     return groupMap[compName];
   }
 
-  // (B) 아이템(공정 단계) 관리용
   let itemsArray = [];
 
-  // 4) 데이터 조회 로직
   try {
-    // 시도 1: '제품'으로 조회
-    let productData = await contract.getProduct(inputId);
+    // 제품 기준 조회
+    let productData = await contract.getProduct(parsedId);
     const componentIds = productData.componentTrackingIds || productData[2];
 
     for (let compId of componentIds) {
@@ -458,21 +461,17 @@
         let compData = await contract.getComponent(compId);
         const compName = compData.name || compData[1];
         const processSteps = compData.processSteps || compData[4];
-
-        // 그룹ID (부속품 이름으로 구분)
         const gId = getGroupId(compName);
 
         processSteps.forEach((step, index) => {
-          // 블록 타임 -> JS Date
           const dateObj = new Date(step.timestamp * 1000);
-
           itemsArray.push({
             id: `${compId}-${index}`,
             group: gId,
             start: dateObj,
-            type: 'point',       // 점 형태로 표시
-            title: step.description, // 마우스 오버 시 툴팁으로 표시
-            content: ''          // 점만 표시(내용은 툴팁으로)
+            type: 'point',
+            title: step.description,
+            content: ''
           });
         });
       } catch (err) {
@@ -480,20 +479,17 @@
       }
     }
   } catch (productError) {
-    // 시도 2: '부속품' 단독 조회
+    // 부속품 단독 조회
     try {
-      let compData = await contract.getComponent(inputId);
+      let compData = await contract.getComponent(parsedId);
       const compName = compData.name || compData[1];
       const processSteps = compData.processSteps || compData[4];
-
-      // 그룹ID
       const gId = getGroupId(compName);
 
       processSteps.forEach((step, index) => {
         const dateObj = new Date(step.timestamp * 1000);
-
         itemsArray.push({
-          id: `${inputId}-${index}`,
+          id: `${parsedId}-${index}`,
           group: gId,
           start: dateObj,
           type: 'point',
@@ -502,26 +498,26 @@
         });
       });
     } catch (err) {
+      console.error("getComponent 호출 실패:", err);
       document.getElementById("timeline").innerHTML =
         "<p>입력한 트래킹 ID의 정보를 가져올 수 없습니다.</p>";
       return;
     }
   }
 
-  // 5) 데이터가 없으면 메시지
+  // 정보가 없을 경우
   if (itemsArray.length === 0) {
     document.getElementById("timeline").innerHTML =
       "<p>해당 ID에 대한 공정 단계 정보가 없습니다.</p>";
     return;
   }
 
-  // 6) vis-timeline에 표시
+  // 6) vis-timeline 표시
   const timelineItems = new vis.DataSet(itemsArray);
 
-  // 옵션 설정
   const options = {
-    orientation: { axis: 'top' },  // 축(날짜/시간) 상단 배치
-    stack: false,                  // 한 줄에 점들을 나열 (겹치면 옆으로)
+    orientation: { axis: 'top' },
+    stack: false,
     width: '100%',
     height: '500px',
     zoomable: true,

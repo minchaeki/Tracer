@@ -1,21 +1,18 @@
-(async function() {
-  // 1) MetaMask(또는 웹3 지갑) 연결
-  if (typeof window.ethereum === "undefined") {
-    d3.select("#treeSVG")
-      .append("text")
-      .attr("x", 20)
-      .attr("y", 20)
-      .text("MetaMask(또는 호환 지갑)가 설치되어 있지 않습니다.");
+async function setupComponentForm(componentName) {
+  const form = document.querySelector("form");
+
+  if (!window.ethereum) {
+    alert("MetaMask를 설치해주세요.");
     return;
   }
-  let provider = new ethers.providers.Web3Provider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
+
+  // ✅ 관리자 인증 로직 제거
+  await window.ethereum.request({ method: "eth_requestAccounts" });
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
-  // 2) 컨트랙트 정보 
-  const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
-  const contractABI = [
-    {
+  const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3"; // 배포한 스마트컨트랙트 주소
+  const contractABI = [{
       "anonymous": false,
       "inputs": [
         {
@@ -424,235 +421,100 @@
       ],
       "stateMutability": "view",
       "type": "function"
-    }
-  ];
+    }];
   const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-  // 3) 사용자 입력
-  const inputId = prompt("조회할 트래킹 ID(또는 제품 ID)를 입력하세요");
-  if (!inputId) {
-    d3.select("#treeSVG")
-      .append("text")
-      .attr("x", 20)
-      .attr("y", 20)
-      .text("트래킹 ID가 입력되지 않았습니다.");
-    return;
-  }
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-  // 4) 트리 데이터 구성
-  let treeData = {};
-  try {
-    // (A) 제품 조회
-    let productData = await contract.getProduct(inputId);
-    const prodId = productData.productId ? productData.productId.toString() : productData[0].toString();
-    const productName = productData.name || productData[1];
-    const componentIds = productData.componentTrackingIds || productData[2];
+    const origin = form.querySelector("input").value;
+    const details = form.querySelector("textarea").value;
+    const steps = [...form.querySelectorAll(".step")].map(el => el.value).filter(Boolean);
 
-    // 루트 노드(제품)
-    treeData = {
-      name: `${productName} (제품 ID: ${prodId})`,
-      children: []
-    };
-
-    // 부속품들
-    for (let compId of componentIds) {
-      try {
-        let compData = await contract.getComponent(compId);
-        const compName = compData.name || compData[1];
-        const processSteps = compData.processSteps || compData[4];
-
-        let compNode = {
-          name: `${compName} (부속품 ID: ${compId})`,
-          children: []
-        };
-        processSteps.forEach(step => {
-          const dateStr = new Date(step.timestamp * 1000).toLocaleString();
-          compNode.children.push({
-            name: `${dateStr} - ${step.description}`
-          });
-        });
-        treeData.children.push(compNode);
-
-      } catch (err) {
-        console.error(`부속품 ${compId} 조회 실패:`, err);
-        treeData.children.push({ name: `부속품 ${compId} 조회 실패` });
-      }
-    }
-  } catch (productError) {
-    // (B) 부속품 단독 조회
-    try {
-      let compData = await contract.getComponent(inputId);
-      const compName = compData.name || compData[1];
-      const processSteps = compData.processSteps || compData[4];
-
-      treeData = {
-        name: `${compName} (부속품 ID: ${inputId})`,
-        children: []
-      };
-      processSteps.forEach(step => {
-        const dateStr = new Date(step.timestamp * 1000).toLocaleString();
-        treeData.children.push({
-          name: `${dateStr} - ${step.description}`
-        });
-      });
-    } catch (err2) {
-      d3.select("#treeSVG")
-        .append("text")
-        .attr("x", 20)
-        .attr("y", 20)
-        .text("입력한 트래킹 ID의 정보를 가져올 수 없습니다.");
+    if (!origin || !details || steps.length === 0) {
+      alert("모든 필드를 입력해주세요.");
       return;
     }
-  }
 
-  // 5) D3 트리 (가로 방향)
-  // 여기서 margin.left를 200으로 늘려, 텍스트가 잘리지 않도록 함
-  const margin = { top: 20, right: 50, bottom: 20, left: 200 },
-        width = 1200 - margin.left - margin.right,
-        height = 800 - margin.top - margin.bottom;
+    try {
+      console.log("📤 createComponent 트랜잭션 전송 중...");
+      const tx = await contract.createComponent(componentName, origin, details, steps);
+      const receipt = await tx.wait();
+      console.log("📦 receipt:", receipt);
 
-  const svg = d3.select("#treeSVG")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+      const args = getEventArgs(receipt, "ComponentCreated", contractABI);
+      console.log("📌 이벤트 결과:", args);
 
-  let i = 0;
-  const duration = 750;
+      const trackingId = args?.trackingId?.toString();
+      console.log("✅ trackingId:", trackingId);
 
-  // 루트 노드
-  let root = d3.hierarchy(treeData, d => d.children);
-  // (세로축) 중앙
-  root.x0 = height / 2;
-  root.y0 = 0;
+      if (!trackingId) {
+        alert("등록 실패 (이벤트 수신 실패)");
+        return;
+      }
 
-  // 가로 트리 설정
-  const treemap = d3.tree()
-    .size([height, width])
-    .separation((a, b) => (a.parent === b.parent ? 1 : 1.2));
+      if (steps.length > 0) {
+        const stepTx = await contract.addProcessStep(trackingId, steps[0]);
+        await stepTx.wait();
+      }
 
-  // 자식 노드를 접어서 시작
-  if (root.children) {
-    root.children.forEach(collapse);
-  }
+      const savedSteps = await contract.getProcessSteps(trackingId);
+      console.log(savedSteps);
 
-  function collapse(d) {
-    if (d.children) {
-      d._children = d.children;
-      d._children.forEach(collapse);
-      d.children = null;
+
+      try {
+        await navigator.clipboard.writeText(trackingId);
+        alert(`${componentName} 등록 완료!\n부속품 ID: ${trackingId} (클립보드에 복사됨됨)`)
+      } catch {
+        alert(` ${componentName} 등록 완료!\n부속품 ID: ${trackingId}`);
+      }
+
+      form.reset();
+      window.location.href = "../index.html";
+
+    } catch (err) {
+      console.error("❌ 등록 중 오류 발생:", err);
+      alert("트랜잭션 처리 중 오류가 발생했습니다.");
+    }
+  });
+}
+
+// 🔹 이벤트 파싱 함수
+function getEventArgs(receipt, eventName, abi) {
+  const iface = new ethers.utils.Interface(abi);
+  for (const log of receipt.logs) {
+    try {
+      const parsed = iface.parseLog(log);
+      if (parsed.name === eventName) return parsed.args;
+    } catch (e) {
+      continue;
     }
   }
+  return null;
+}
 
-  update(root);
-
-  // 업데이트 함수
-  function update(source) {
-    treemap(root);
-    let nodes = root.descendants();
-    let links = root.links();
-
-    // x = 세로, y = 가로
-    nodes.forEach(d => {
-      d.x = d.x; // 세로 위치 그대로
-      d.y = d.depth * 180; // 가로 방향 간격
-    });
-
-    // 1) 노드
-    let node = svg.selectAll('g.node')
-      .data(nodes, d => d.id || (d.id = ++i));
-
-    // Enter
-    let nodeEnter = node.enter().append('g')
-      .attr('class', 'node')
-      .attr("transform", d => `translate(${source.y0},${source.x0})`)
-      .on("click", (event, d) => {
-        if (d.children) {
-          d._children = d.children;
-          d.children = null;
-        } else {
-          d.children = d._children;
-          d._children = null;
-        }
-        update(d);
-      });
-
-    // 원(circle)
-    nodeEnter.append('circle')
-      .attr('r', 1e-6)
-      .style('fill', d => d._children ? 'lightsteelblue' : '#fff');
-
-    // 텍스트
-    nodeEnter.append('text')
-      .attr('dy', '.35em')
-      .attr('x', d => d.children || d._children ? -13 : 13)
-      .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
-      .text(d => d.data.name)
-      .style('fill-opacity', 1e-6);
-
-    // Update
-    let nodeUpdate = nodeEnter.merge(node);
-
-    nodeUpdate.transition()
-      .duration(duration)
-      .attr("transform", d => `translate(${d.y},${d.x})`);
-
-    nodeUpdate.select('circle')
-      .attr('r', 10)
-      .style('fill', d => d._children ? 'lightsteelblue' : '#fff')
-      .style('stroke', 'steelblue')
-      .style('stroke-width', 2);
-
-    nodeUpdate.select('text')
-      .style('fill-opacity', 1);
-
-    // Exit
-    let nodeExit = node.exit().transition()
-      .duration(duration)
-      .attr("transform", d => `translate(${source.y},${source.x})`)
-      .remove();
-
-    nodeExit.select('circle')
-      .attr('r', 1e-6);
-    nodeExit.select('text')
-      .style('fill-opacity', 1e-6);
-
-    // 2) Links
-    let link = svg.selectAll('path.link')
-      .data(links, d => d.target.id);
-
-    let linkEnter = link.enter().insert('path', "g")
-      .attr('class', 'link')
-      .attr('d', d => {
-        let o = { x: source.x0, y: source.y0 };
-        return diagonal(o, o);
-      });
-
-    let linkUpdate = linkEnter.merge(link);
-    linkUpdate.transition()
-      .duration(duration)
-      .attr('d', d => diagonal(d.source, d.target));
-
-    link.exit().transition()
-      .duration(duration)
-      .attr('d', d => {
-        let o = { x: source.x, y: source.y };
-        return diagonal(o, o);
-      })
-      .remove();
-
-    // 이전 위치 저장
-    nodes.forEach(d => {
-      d.x0 = d.x;
-      d.y0 = d.y;
-    });
+async function checkAdminAccess() {
+  // 메타마스크 주소 요청
+  if (!window.ethereum) {
+    alert("MetaMask가 필요합니다.");
+    window.location.href = "../index.html";
+    return;
   }
+  await window.ethereum.request({ method: 'eth_requestAccounts' });
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const userAddress = (await signer.getAddress()).toLowerCase();
 
-  // 가로 트리용 대각선
-  function diagonal(s, d) {
-    return `M ${s.y},${s.x}
-            C ${(s.y + d.y) / 2},${s.x},
-              ${(s.y + d.y) / 2},${d.x},
-              ${d.y},${d.x}`;
+  // adminWallets.json 불러오기 (경로는 상황에 맞게)
+  const res = await fetch("../data/adminWallets.json");
+  const wallets = await res.json();
+  const adminAddrs = wallets.map(w => w.address.toLowerCase());
+
+  if (!adminAddrs.includes(userAddress)) {
+    alert("관리자 권한이 없습니다. 접근이 차단됩니다.");
+    window.location.href = "../index.html";
   }
-})();
+}
+
+// 페이지 로드시 실행
+checkAdminAccess();

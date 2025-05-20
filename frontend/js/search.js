@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   let provider = new ethers.providers.Web3Provider(window.ethereum);
   await provider.send("eth_requestAccounts", []);
   const signer = provider.getSigner();
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // 실제 주소로 변경
+  const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3"; // 실제 주소로 변경
   const contractABI = [
     {
       "anonymous": false,
@@ -158,6 +158,11 @@ document.addEventListener("DOMContentLoaded", async function () {
           "internalType": "string",
           "name": "_details",
           "type": "string"
+        },
+        {
+          "internalType": "string[]",
+          "name": "_processDescriptions",
+          "type": "string[]"
         }
       ],
       "name": "createComponent",
