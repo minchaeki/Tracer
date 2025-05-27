@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tracer</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="../static/css/tree.css" />
+
+    <!-- Ether.js 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <!-- D3 트리 js 추가-->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- 제이쿼리 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div onclick="location.href='index.html'" class="logo">♦︎ Tracer</div>
+        <div class="admin-btn" onclick="location.href='admin/admin.html'">
+          Administrator
+        </div>
+        <button id="upBtn" class="up-btn">▲</button>
+      </header>
+      <main>
+        <div class="main-content">
+          <div class="main-box">
+            <div class="title-area">
+              <h1 class="main-title animated-headline">
+                <span class="gradient-text gradient-animate">Trace</span>
+                what<br />
+                really matters.
+              </h1>
+              <p class="main-desc">
+                이더리움 블록체인을 이용한 더 빠르고 정확한 물류 추적<br />
+                트레이서를 통해 더 나은 매일을 경험하세요
+              </p>
+            </div>
+            <div class="search-area">
+              <input
+                type="text"
+                id="trackingId"
+                placeholder="해당 트래킹 ID를 입력하세요"
+              />
+              <button id="btnSearchInfo" class="search-btn">
+                <span>검색</span>
+              </button>
+            </div>
+          </div>
+          <svg id="treeSVG" class="hidden"></svg>
+          <div>
+            <button
+              id="btnTimeline"
+              class="hidden timeline-btn-position admin-btn"
+            >
+              <span> 타임라인 보기 </span>
+            </button>
+          </div>
+          <div id="resultSection" class="info-section hidden"></div>
+        </div>
+
+        <script src="../static/js/search.js"></script>
+        <script src="../static/js/tree.js"></script>
+      </main>
+      <footer>
+        <div style="margin-top: 180px">
+          <div style="font-size: small; text-align: right; font-weight: 100">
+            <p style="color: #ffffff56">
+              <span>
+                Capstone Project Team 추적자들
+                https://github.com/KGUchaser/Tracer
+                <br />
+                ©Copyright 2025. All Rights Reserved.
+              </span>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
