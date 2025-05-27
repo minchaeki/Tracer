@@ -1,6 +1,6 @@
 {
   "components": {
-    "4": {
+    "1": {
       "name": "배터리",
       "origin": "한국",
       "details": "고성능 리튬이온 배터리. 안정적인 전력 공급을 위한 핵심 부품.",
@@ -30,28 +30,28 @@
       "usage": [
         {
           "finishedProduct": "스마트폰 A",
-          "productId": "8",
+          "productId": "5",
           "usage": "3000mAh",
           "productionTime": "25분55초",
           "details": "배터리 셀 조립 및 용량 테스트 완료"
         },
         {
           "finishedProduct": "스마트폰 B",
-          "productId": "9",
+          "productId": "6",
           "usage": "3500mAh",
           "productionTime": "27분00초",
           "details": "고용량 배터리 셀 조립 완료"
         },
         {
           "finishedProduct": "태블릿",
-          "productId": "10",
+          "productId": "7",
           "usage": "5000mAh",
           "productionTime": "28분00초",
           "details": "태블릿 전용 대용량 배터리 조립 완료"
         }
       ]
     },
-    "5": {
+    "2": {
       "name": "디스플레이",
       "origin": "일본",
       "details": "고해상도 OLED 디스플레이. 선명한 화질과 낮은 전력 소모가 특징.",
@@ -81,28 +81,28 @@
       "usage": [
         {
           "finishedProduct": "스마트폰 A",
-          "productId": "8",
+          "productId": "5",
           "usage": "6.1인치 OLED",
           "productionTime": "26분10초",
           "details": "화면 조립 및 색상 보정 완료"
         },
         {
           "finishedProduct": "스마트폰 B",
-          "productId": "9",
+          "productId": "6",
           "usage": "6.5인치 OLED",
           "productionTime": "27분10초",
           "details": "대형 패널 조립 및 검수 완료"
         },
         {
           "finishedProduct": "태블릿",
-          "productId": "10",
+          "productId": "7",
           "usage": "10.1인치 OLED",
           "productionTime": "28분10초",
           "details": "대형 디스플레이 조립 및 색상 보정 완료"
         }
       ]
     },
-    "6": {
+    "3": {
       "name": "프로세서",
       "origin": "미국",
       "details": "최신 AI 지원 프로세서. 고성능 연산 및 에너지 효율이 뛰어남.",
@@ -132,28 +132,28 @@
       "usage": [
         {
           "finishedProduct": "스마트폰 A",
-          "productId": "8",
+          "productId": "5",
           "usage": "1개",
           "productionTime": "26분20초",
           "details": "칩 성능 및 온도 테스트 완료"
         },
         {
           "finishedProduct": "스마트폰 B",
-          "productId": "9",
+          "productId": "6",
           "usage": "1개",
           "productionTime": "27분20초",
           "details": "최신 프로세서 성능 최적화 완료"
         },
         {
           "finishedProduct": "태블릿",
-          "productId": "10",
+          "productId": "7",
           "usage": "1개",
           "productionTime": "28분20초",
           "details": "태블릿 전용 프로세서 성능 테스트 완료"
         }
       ]
     },
-    "7": {
+    "4": {
       "name": "카메라 모듈",
       "origin": "독일",
       "details": "고화질 이미지 센서 탑재. 뛰어난 색감과 선명도를 자랑함.",
@@ -183,21 +183,21 @@
       "usage": [
         {
           "finishedProduct": "스마트폰 A",
-          "productId": "8",
+          "productId": "5",
           "usage": "2개",
           "productionTime": "26분30초",
           "details": "듀얼 카메라 정밀 조립 완료"
         },
         {
           "finishedProduct": "스마트폰 B",
-          "productId": "9",
+          "productId": "6",
           "usage": "3개",
           "productionTime": "27분30초",
           "details": "트리플 카메라 모듈 정밀 조립 완료"
         },
         {
           "finishedProduct": "태블릿",
-          "productId": "10",
+          "productId": "7",
           "usage": "1개",
           "productionTime": "28분30초",
           "details": "싱글 카메라 모듈 정밀 조립 완료"
@@ -206,32 +206,32 @@
     }
   },
   "finishedProducts": {
-    "8": {
+    "5": {
       "name": "스마트폰 A",
       "componentsUsage": [
         {
-          "trackingId": "4",
+          "trackingId": "1",
           "componentName": "배터리",
           "usage": "3000mAh",
           "productionTime": "25분55초",
           "details": "배터리 셀 조립 및 용량 테스트 완료"
         },
         {
-          "trackingId": "5",
+          "trackingId": "2",
           "componentName": "디스플레이",
           "usage": "6.1인치 OLED",
           "productionTime": "26분10초",
           "details": "화면 조립 및 색상 보정 완료"
         },
         {
-          "trackingId": "6",
+          "trackingId": "3",
           "componentName": "프로세서",
           "usage": "1개",
           "productionTime": "26분20초",
           "details": "칩 성능 및 온도 테스트 완료"
         },
         {
-          "trackingId": "7",
+          "trackingId": "4",
           "componentName": "카메라 모듈",
           "usage": "2개",
           "productionTime": "26분30초",
@@ -239,32 +239,32 @@
         }
       ]
     },
-    "9": {
+    "6": {
       "name": "스마트폰 B",
       "componentsUsage": [
         {
-          "trackingId": "4",
+          "trackingId": "1",
           "componentName": "배터리",
           "usage": "3500mAh",
           "productionTime": "27분00초",
           "details": "고용량 배터리 셀 조립 완료"
         },
         {
-          "trackingId": "5",
+          "trackingId": "2",
           "componentName": "디스플레이",
           "usage": "6.5인치 OLED",
           "productionTime": "27분10초",
           "details": "대형 패널 조립 및 검수 완료"
         },
         {
-          "trackingId": "6",
+          "trackingId": "3",
           "componentName": "프로세서",
           "usage": "1개",
           "productionTime": "27분20초",
           "details": "최신 프로세서 성능 최적화 완료"
         },
         {
-          "trackingId": "7",
+          "trackingId": "4",
           "componentName": "카메라 모듈",
           "usage": "3개",
           "productionTime": "27분30초",
@@ -272,32 +272,32 @@
         }
       ]
     },
-    "10": {
+    "7": {
       "name": "태블릿",
       "componentsUsage": [
         {
-          "trackingId": "4",
+          "trackingId": "1",
           "componentName": "배터리",
           "usage": "5000mAh",
           "productionTime": "28분00초",
           "details": "태블릿 전용 대용량 배터리 조립 완료"
         },
         {
-          "trackingId": "5",
+          "trackingId": "2",
           "componentName": "디스플레이",
           "usage": "10.1인치 OLED",
           "productionTime": "28분10초",
           "details": "대형 디스플레이 조립 및 색상 보정 완료"
         },
         {
-          "trackingId": "6",
+          "trackingId": "3",
           "componentName": "프로세서",
           "usage": "1개",
           "productionTime": "28분20초",
           "details": "태블릿 전용 프로세서 성능 테스트 완료"
         },
         {
-          "trackingId": "7",
+          "trackingId": "4",
           "componentName": "카메라 모듈",
           "usage": "1개",
           "productionTime": "28분30초",

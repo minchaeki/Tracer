@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tracer | Timeline</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="../static/css/timeline.css" />
+
+    <!-- ethers.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <!-- 제이쿼리 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div onclick="location.href='index.html'" class="logo">♦︎ Tracer</div>
+        <button id="upBtn" class="up-btn">▲</button>
+      </header>
+      <main>
+        <div class="main-content">
+          <div class="timeline-main-box">
+            <div id="timeline" style="display: flex; min-width: 1100px">
+              타임라인 추적중...
+            </div>
+          </div>
+        </div>
+        <script src="../static/js/timeline.js"></script>
+      </main>
+      <footer>
+        <div style="margin-top: 120px">
+          <div style="font-size: small; text-align: right; font-weight: 100">
+            <p style="color: #ffffff56">
+              <span>
+                Capstone Project Team 추적자들
+                https://github.com/KGUchaser/Tracer
+                <br />
+                ©Copyright 2025. All Rights Reserved.
+              </span>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
