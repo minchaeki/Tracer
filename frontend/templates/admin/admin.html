@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tracer | Administrator Page</title>
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <link rel="stylesheet" href="../../static/css/admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div onclick="location.href='../index.html'" class="logo">
+          ♦︎ Tracer
+        </div>
+      </header>
+      <main>
+        <div class="main-content">
+          <div class="main-box">
+            <h1 class="main-title animated-headline">
+              <span class="gradient-text gradient-animate"
+                >Together,<br
+              /></span>
+              we trace better.
+            </h1>
+
+            <form id="adminForm">
+              <label>제품 종류 선택</label>
+              <select id="componentName" required>
+                <option value="배터리">배터리</option>
+                <option value="디스플레이">디스플레이</option>
+                <option value="스마트폰">스마트폰</option>
+                <option value="메인보드">메인보드</option>
+                <option value="케이스">케이스</option>
+              </select>
+
+              <label>원산지</label>
+              <input type="text" id="origin" placeholder="예: 한국" required />
+
+              <label>세부 설명</label>
+              <textarea
+                id="details"
+                placeholder="예: 고성능 리튬이온 배터리"
+                required
+              ></textarea>
+
+              <label>공정 단계</label>
+              <div class="step-area">
+                <div id="stepContainer">
+                  <input
+                    type="text"
+                    class="step"
+                    placeholder="공정 단계 설명 (예: 조립)"
+                    required
+                  />
+                </div>
+                <button onclick="addStep()" class="add-btn">
+                  <span>+</span>
+                </button>
+              </div>
+
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  justify-content: center;
+                  margin-top: 20px;
+                "
+              >
+                <button type="submit" class="search-btn">
+                  <span>스마트 컨트랙트 배포</span>
+                </button>
+                <button
+                  type="button"
+                  onclick="location.href='../index.html'"
+                  class="cancel-btn"
+                >
+                  <span>나가기</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <script src="../../static/js/admin.js"></script>
+        <script>
+          function addStep() {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.className = "step";
+            input.placeholder = "공정 단계 설명 (예: 품질검사)";
+            input.required = true;
+            document.getElementById("stepContainer").appendChild(input);
+          }
+
+          // 등록 버튼 누르면 setupComponentForm() 호출
+          document
+            .getElementById("adminForm")
+            .addEventListener("submit", (e) => {
+              e.preventDefault();
+              const componentName =
+                document.getElementById("componentName").value;
+              // setupComponentForm(componentName);
+            });
+        </script>
+      </main>
+      <footer>
+        <div style="margin-top: 180px">
+          <div style="font-size: small; text-align: right; font-weight: 100">
+            <p style="color: #ffffff56">
+              <span>
+                Capstone Project Team 추적자들
+                https://github.com/KGUchaser/Tracer
+                <br />
+                ©Copyright 2025. All Rights Reserved.
+              </span>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
