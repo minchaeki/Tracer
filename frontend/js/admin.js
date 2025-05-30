@@ -1,5 +1,5 @@
-async function setupComponentForm(componentName) {
-  const form = document.querySelector("form");
+document.addEventListener("DOMContentLoaded", async function () {
+const form = document.querySelector("form");
 
   if (!window.ethereum) {
     alert("MetaMask를 설치해주세요.");
@@ -427,6 +427,7 @@ async function setupComponentForm(componentName) {
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
+    const componentName = form.querySelector("#componentName").value;
     const origin = form.querySelector("input").value;
     const details = form.querySelector("textarea").value;
     const steps = [...form.querySelectorAll(".step")].map(el => el.value).filter(Boolean);
@@ -453,10 +454,10 @@ async function setupComponentForm(componentName) {
         return;
       }
 
-      if (steps.length > 0) {
-        const stepTx = await contract.addProcessStep(trackingId, steps[0]);
-        await stepTx.wait();
-      }
+      // if (steps.length > 999) {
+      //   const stepTx = await contract.addProcessStep(trackingId, steps[0]);
+      //   await stepTx.wait();
+      // }
 
       const savedSteps = await contract.getProcessSteps(trackingId);
       console.log(savedSteps);
@@ -477,7 +478,7 @@ async function setupComponentForm(componentName) {
       alert("트랜잭션 처리 중 오류가 발생했습니다.");
     }
   });
-}
+});
 
 // 🔹 이벤트 파싱 함수
 function getEventArgs(receipt, eventName, abi) {
@@ -500,7 +501,7 @@ async function checkAdminAccess() {
     window.location.href = "../index.html";
     return;
   }
-  await window.ethereum.request({ method: 'eth_requestAccounts' });
+  // await window.ethereum.request({ method: 'eth_requestAccounts' });
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const userAddress = (await signer.getAddress()).toLowerCase();
@@ -516,5 +517,5 @@ async function checkAdminAccess() {
   }
 }
 
-// 페이지 로드시 실행
+// // 페이지 로드시 실행
 checkAdminAccess();
