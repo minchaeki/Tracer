@@ -52,11 +52,14 @@ vscode로 폴더를 열고 터미널을 킵니다.(ctrl+~)
 wsl
 npx hardhat ignition deploy ./ignition/modules/TraceabilityModule.js --network localhost
 npx hardhat run scripts/storeData.js --network localhost
+npx hardhat run scripts/generateWallets.js --network localhost
 ```
 
 """(각 배포 1분 가량 시간이 소요 될 수 있습니다.)"""
 
 참고: 위 명령어들은 모두 프로젝트 루트 디렉토리에서 실행해야 합니다. Hardhat이 로컬 네트워크(localhost)에 연결되어 있는지 확인하세요.
+
+4. scripts/adminWallets.json을 fronted/data 폴더로 이동시켜주세요.
 
 5. 실행
 
