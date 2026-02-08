@@ -20,11 +20,10 @@
 9.  [시스템 시현](#-시스템-시현)
 10. [시작하기 (Getting Started)](#-시작하기-getting-started)
 11. [사용 방법](#-사용-방법)
-12. [API 문서](#-api-문서)
-13. [코드 컨벤션](#-코드-컨벤션)
-14. [기여하기](#-기여하기)
-15. [문제 해결 (Troubleshooting)](#-문제-해결-troubleshooting)
-16. [논문 정보](#-논문-정보)
+12. [코드 컨벤션](#-코드-컨벤션)
+13. [기여하기](#-기여하기)
+14. [문제 해결 (Troubleshooting)](#-문제-해결-troubleshooting)
+15. [논문 정보](#-논문-정보)
 
 ---
 
@@ -150,7 +149,6 @@
 |--------|------|
 | **Blockchain** | ![Ethereum](https://img.shields.io/badge/Ethereum-Sepolia-3C3C3D?style=flat-square&logo=ethereum&logoColor=white) ![Solidity](https://img.shields.io/badge/Solidity-363636?style=flat-square&logo=solidity&logoColor=white) ![Hardhat](https://img.shields.io/badge/Hardhat-FFF100?style=flat-square&logo=hardhat&logoColor=black) |
 | **Frontend** | ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) ![Ethers.js](https://img.shields.io/badge/Ethers.js-2535A0?style=flat-square) |
-| **Backend** | Node.js, Express.js |
 | **Wallet** | ![MetaMask](https://img.shields.io/badge/MetaMask-F6851B?style=flat-square&logo=metamask&logoColor=white) |
 
 ---
@@ -221,7 +219,7 @@
 *   `ComponentCreated(uint256 trackingId, string name)`: 부속품이 성공적으로 생성되었을 때 발생합니다.
 *   `ProductCreated(uint256 productId, string name, uint256[] componentTrackingIds)`: 완제품이 성공적으로 생성되었을 때 발생합니다.
 *   `ProcessStepAdded(uint256 trackingId, string description, uint256 timestamp)`: 공정 단계가 부속품에 추가되었을 때 발생합니다.
-    이 이벤트들은 외부 애플리케이션(프론트엔드, 백엔드 서버)에서 블록체인 상의 데이터 변경 사항을 실시간으로 모니터링하고 반응하는 데 사용될 수 있습니다.
+    이 이벤트들은 외부 애플리케이션(프론트엔드)에서 블록체인 상의 데이터 변경 사항을 실시간으로 모니터링하고 반응하는 데 사용될 수 있습니다.
 
 이 계약은 부속품과 완제품 간의 복잡한 관계를 블록체인 상에서 효율적으로 모델링하고, 각 단계의 이력을 불변하게 기록하여 제품의 투명한 추적 가능성을 보장합니다.
 
@@ -311,12 +309,6 @@ MetaMask 기반 사용자 인증으로 관리자와 사용자 역할 분리했�
     npm install
     ```
 
-    `server` 디렉토리로 이동하여 백엔드 의존성을 설치합니다.
-    ```bash
-    cd server
-    npm install
-    cd ..
-    ```
 
 ### 스마트 계약 배포
 
@@ -342,23 +334,12 @@ MetaMask 기반 사용자 인증으로 관리자와 사용자 역할 분리했�
     ```bash
     npx hardhat ignition deploy ignition/modules/TraceabilityModule.js --network localhost
     ```
-    배포 성공 시, 터미널에 배포된 계약 주소가 출력됩니다. 이 주소는 프론트엔드 및 백엔드 설정에 필요하므로 기록해두세요. 배포 정보는 `ignition/deployments/localhost/deployed_addresses.json` 파일에서도 확인할 수 있습니다.
+    배포 성공 시, 터미널에 배포된 계약 주소가 출력됩니다. 이 주소는 프론트엔드 설정에 필요하므로 기록해두세요. 배포 정보는 `ignition/deployments/localhost/deployed_addresses.json` 파일에서도 확인할 수 있습니다.
 
-### 백엔드 서버 실행
-
-백엔드 서버는 API 엔드포인트를 제공하고, QR 코드 생성이나 데이터 매핑과 같이 블록체인과 직접 관련 없는 상호작용을 처리합니다.
-
-1.  **백엔드 서버 시작:**
-
-    ```bash
-    cd server
-    node index.js
-    ```
-    서버는 기본적으로 `http://localhost:3001`에서 실행됩니다.
 
 ### 프론트엔드 실행
 
-프론트엔드는 배포된 스마트 계약 및 백엔드 서버와 상호작용하는 정적 웹 애플리케이션입니다.
+프론트엔드는 배포된 스마트 계약과 상호작용하는 정적 웹 애플리케이션입니다.
 
 1.  **관리자 지갑 생성 (선택 사항):**
 
@@ -386,7 +367,7 @@ MetaMask 기반 사용자 인증으로 관리자와 사용자 역할 분리했�
 
 ## 📖 사용 방법
 
-Tracer 애플리케이션과 상호작용하는 방법입니다. Hardhat 로컬 노드, 백엔드 서버, 프론트엔드 서버가 모두 실행 중인지 확인하세요.
+Tracer 애플리케이션과 상호작용하는 방법입니다. Hardhat 로컬 노드, 프론트엔드 서버가 모두 실행 중인지 확인하세요.
 
 1.  **관리자 패널 접근:**
     *   `admin/admin.html` (예: `http://localhost:8080/admin/admin.html`)로 이동하여 배포된 계약 주소 설정 등 관리 기능을 사용합니다.
@@ -412,56 +393,6 @@ Tracer 애플리케이션과 상호작용하는 방법입니다. Hardhat 로컬 
 
 ---
 
-## 📑 API 문서
-
-백엔드 서버는 다음과 같은 API 엔드포인트를 제공합니다.
-
-### `POST /upload`
-
-AIBOM 데이터를 서버에 업로드하고 JSON 파일로 저장합니다.
-
-*   **URL:** `/upload`
-*   **Method:** `POST`
-*   **Content-Type:** `application/json`
-*   **Request Body:**
-    ```json
-    {
-      "components": [
-        {
-          "name": "ComponentA",
-          "part_id": "P123",
-          "supplier": "SupplierX",
-          "materials": [
-            {
-              "name": "Material1",
-              "origin": "CountryY"
-            }
-          ]
-        }
-      ]
-    }
-    ```
-*   **Success Response (200 OK):**
-    ```json
-    {
-      "success": true,
-      "file": "ComponentA_input.json"
-    }
-    ```
-*   **Error Response (400 Bad Request):**
-    ```json
-    {
-      "error": "잘못된 데이터 형식입니다."
-    }
-    ```
-*   **Error Response (500 Internal Server Error):**
-    ```json
-    {
-      "error": "파일 저장 실패"
-    }
-    ```
-
----
 
 ## 📏 코드 컨벤션
 
@@ -508,14 +439,7 @@ AIBOM 데이터를 서버에 업로드하고 JSON 파일로 저장합니다.
         2.  `npx hardhat node` 실행 시 출력된 테스트 계정 중 하나를 MetaMask로 "개인 키 가져오기"를 통해 추가했는지 확인하세요.
         3.  `frontend/data/adminWallets.json` 파일에 등록된 관리자 지갑 주소와 MetaMask에서 현재 선택된 계정 주소가 일치하는지 확인하세요.
 
-2.  **데이터 등록이 실패하는 경우**
-    *   **원인:** 백엔드 서버가 실행 중이지 않거나, 전송된 데이터 형식이 잘못되었을 수 있습니다.
-    *   **해결 방법:**
-        1.  `cd server && node index.js` 명령을 통해 백엔드 서버가 정상적으로 실행 중인지 터미널에서 확인하세요.
-        2.  프론트엔드에서 백엔드로 보내는 `fetch` 요청의 본문(body)이 API 문서에 명시된 JSON 형식과 일치하는지 개발자 도구(F12)의 'Network' 탭에서 확인하세요.
-        3.  서버 터미널에 `파일 저장 실패`와 같은 에러 메시지가 출력되는지 확인하여 파일 시스템 권한 문제를 점검하세요.
-
-3.  **검색 결과가 화면에 올바르게 표시되지 않는 경우**
+2.  **검색 결과가 화면에 올바르게 표시되지 않는 경우**
     *   **원인:** 스마트 계약 주소가 프론트엔드에 잘못 설정되었거나, 블록체인과의 통신(RPC 호출)에 문제가 발생했을 수 있습니다.
     *   **해결 방법:**
         1.  브라우저 개발자 도구(F12)의 'Console' 탭을 열어 `RPC Error`, `Contract not found` 등과 같은 오류 메시지가 있는지 확인하세요.
