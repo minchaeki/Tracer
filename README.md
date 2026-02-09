@@ -21,9 +21,8 @@
 10. [시작하기 (Getting Started)](#-시작하기-getting-started)
 11. [사용 방법](#-사용-방법)
 12. [코드 컨벤션](#-코드-컨벤션)
-13. [기여하기](#-기여하기)
-14. [문제 해결 (Troubleshooting)](#-문제-해결-troubleshooting)
-15. [논문 정보](#-논문-정보)
+13. [문제 해결 (Troubleshooting)](#-문제-해결-troubleshooting)
+14. [논문 정보](#-논문-정보)
 
 ---
 
@@ -407,17 +406,6 @@ Tracer 애플리케이션과 상호작용하는 방법입니다. Hardhat 로컬 
         *   이벤트: `PascalCase`
     *   **가시성:** 함수와 상태 변수의 가시성(`public`, `private`, `internal`, `external`)을 명확하게 지정해야 합니다.
 
----
-
-## 🤝 기여하기
-
-프로젝트에 기여하고 싶으시면 다음 절차를 따라주세요.
-
-1.  **이슈 생성:** 버그 리포트나 기능 제안은 GitHub Issues를 통해 제출해주세요.
-2.  **저장소 Fork & Clone:** 이 저장소를 Fork한 후, 로컬 머신에 Clone하세요.
-3.  **브랜치 생성:** 새로운 기능이나 버그 수정을 위한 브랜치를 만드세요. (`git checkout -b feature/new-feature` 또는 `fix/bug-name`)
-4.  **코드 수정 및 커밋:** 변경 사항을 적용하고, 의미 있는 커밋 메시지와 함께 커밋하세요.
-5.  **Push & Pull Request:** 작업 브랜치를 자신의 Fork된 저장소에 Push한 후, 원본 저장소로 Pull Request(PR)를 생성해주세요.
 
 ---
 
