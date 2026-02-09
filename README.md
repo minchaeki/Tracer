@@ -72,14 +72,7 @@
   - 제품 등록 / 검색 / 타임라인 시각화
   - 스마트 컨트랙트 직접 호출
 
-### 2️⃣ Backend (Server)
-- **기술:** Node.js, Express.js
-- **역할**
-  - 오프체인 데이터 관리
-  - AIBOM JSON 파일 저장
-  - QR 코드 생성 및 데이터 매핑
-
-### 3️⃣ Blockchain
+### 2️⃣ Blockchain
 - **기술:** Ethereum, Solidity, Hardhat
 - **역할**
   - 제품·부속품 이력 온체인 저장
